@@ -43,6 +43,7 @@ def fetch_matchups():
         query_params = helper_module.parse_query_params(request.query_string)
         print("hello world after query_params")
         # Check if dictionary is not empty
+        print(query_params)
         if query_params:
             print(query)
             # Try to convert the value to int
