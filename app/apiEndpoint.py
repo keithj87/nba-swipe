@@ -90,7 +90,6 @@ def fetch_players():
         # Call the function to get the query params
         query_params = helper_module.parse_query_params(request.query_string)
         # Check if dictionary is not empty
-        pdb.set_trace()
         if query_params:
 
             # Try to convert the value to int
@@ -133,7 +132,6 @@ def fetch_season_stats():
         # Check if dictionary is not empty
         #pdb.set_trace()
         if query_params:
-
             # Try to convert the value to int
             query = {k: int(v) if isinstance(v, str) and v.isdigit() else v for k, v in query_params.items()}
 
