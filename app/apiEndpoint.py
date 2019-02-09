@@ -8,7 +8,6 @@ import json
 import ast
 import imp
 import pdb
-import random
 
 
 # Import the helpers module
@@ -51,17 +50,13 @@ def fetch_matchups():
             query["Year"] = {"$in": ['2000', ' 2001', ' 2002', ' 2003', ' 2004', ' 2005', ' 2006', ' 2007', ' 2008', ' 2009', ' 2010', ' 2011', ' 2012', ' 2013', ' 2014', ' 2015', ' 2016', ' 2017']}
             print(query)
             # Fetch all the record(s)
-            records_fetched = list(collection.find(query))
-            #pdb.set_trace()
+            records_fetched = collection.find(query)
+
             # Check if the records are found
-            if len(records_fetched) >= 2:
-                #pdb.set_trace()
+            if records_fetched.count() > 2:
                 print("hello world")
-                output = []
-                output.append(random.choice(records_fetched))
-                output.append(random.choice(records_fetched))
                 # Prepare the response
-                return dumps(output)
+                return dumps(records_fetched[0:2])
             else:
                 # No records are found
                 return "", 404
@@ -90,6 +85,7 @@ def fetch_players():
         # Call the function to get the query params
         query_params = helper_module.parse_query_params(request.query_string)
         # Check if dictionary is not empty
+        pdb.set_trace()
         if query_params:
 
             # Try to convert the value to int
@@ -132,6 +128,7 @@ def fetch_season_stats():
         # Check if dictionary is not empty
         #pdb.set_trace()
         if query_params:
+
             # Try to convert the value to int
             query = {k: int(v) if isinstance(v, str) and v.isdigit() else v for k, v in query_params.items()}
 
@@ -155,6 +152,33 @@ def fetch_season_stats():
             else:
                 # Return empty array if no users are found
                 return jsonify([])
+    except:
+        # Error while trying to fetch the resource
+        # Add message for debugging purpose
+        return "", 500
+
+@app.route("/api/v1/leaderboards", methods=['GET'])
+def fetch_leaderboards():
+    """
+       Function to fetch the users.
+       """
+    try:
+        print("hello world /leaderboards")
+        collection = db.season_stats
+        
+        # Return all the records as query string parameters are not available
+        if collection.find().count > 0:
+            # Prepare response if the users are found
+            results_50 = collection.find().limit(50)
+            results_50_condensed = []
+
+            for player in results_50:
+                print results_50_condensed.append({ 'name': player['Player'], 'wins' : player['FG'], 'img_url' : 'https://getmyimage/', 'matchups' : 20})
+
+            return dumps(results_50_condensed)
+        else:
+            # Return empty array if no users are found
+            return jsonify([])
     except:
         # Error while trying to fetch the resource
         # Add message for debugging purpose
