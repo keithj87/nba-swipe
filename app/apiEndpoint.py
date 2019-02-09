@@ -8,6 +8,7 @@ import json
 import ast
 import imp
 import pdb
+import random
 
 
 # Import the helpers module
@@ -50,13 +51,16 @@ def fetch_matchups():
             query["Year"] = {"$in": ['2000', ' 2001', ' 2002', ' 2003', ' 2004', ' 2005', ' 2006', ' 2007', ' 2008', ' 2009', ' 2010', ' 2011', ' 2012', ' 2013', ' 2014', ' 2015', ' 2016', ' 2017']}
             print(query)
             # Fetch all the record(s)
-            records_fetched = collection.find(query)
+            records_fetched = list(collection.find(query))
 
             # Check if the records are found
-            if records_fetched.count() > 2:
+            if len(records_fetched) >= 2:
                 print("hello world")
                 # Prepare the response
-                return dumps(records_fetched[0:2])
+                output = []
+                output.append(random.choice(records_fetched))
+                output.append(random.choice(records_fetched))
+                return dumps(output)
             else:
                 # No records are found
                 return "", 404
@@ -133,12 +137,15 @@ def fetch_season_stats():
             query = {k: int(v) if isinstance(v, str) and v.isdigit() else v for k, v in query_params.items()}
 
             # Fetch all the record(s)
-            records_fetched = collection.find(query)
+            records_fetched = list(collection.find(query))
 
             # Check if the records are found
-            if records_fetched.count() > 0:
+            if len(records_fetched) >= 2:
                 # Prepare the response
-                return dumps(records_fetched)
+                output = []
+                output.append(random.choice(records_fetched))
+                output.append(random.choice(records_fetched))
+                return dumps(output)
             else:
                 # No records are found
                 return "", 404
