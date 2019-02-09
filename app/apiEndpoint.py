@@ -8,6 +8,7 @@ import json
 import ast
 import imp
 import pdb
+import random
 
 
 # Import the helpers module
@@ -53,10 +54,12 @@ def fetch_matchups():
             records_fetched = collection.find(query)
 
             # Check if the records are found
-            if records_fetched.count() > 2:
+            if records_fetched.count() >= 2:
                 print("hello world")
+                output = []
+                output.append(random.choice(records_fetched))
                 # Prepare the response
-                return dumps(records_fetched[0:2])
+                return dumps(output)
             else:
                 # No records are found
                 return "", 404
