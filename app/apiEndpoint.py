@@ -28,6 +28,7 @@ def get_initial_response():
     # Making the message looks good
     resp = jsonify(message)
     # Returning the object
+    print("hello world /")
     return resp
 
 @app.route("/api/v1/matchups", methods=['GET'])
@@ -36,9 +37,11 @@ def fetch_matchups():
        Function to fetch the users.
        """
     try:
+        print("hello world /matchups")
         collection = db.season_stats
         # Call the function to get the query params
         query_params = helper_module.parse_query_params(request.query_string)
+        print("hello world after query_params")
         # Check if dictionary is not empty
         if query_params:
             print(query)
