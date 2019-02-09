@@ -1,3 +1,4 @@
 pymongo==3.6.1
 flask==0.12.2
 gunicorn
+urlparse
