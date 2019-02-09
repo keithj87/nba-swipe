@@ -30,12 +30,55 @@ def get_initial_response():
     # Returning the object
     return resp
 
+@app.route("/api/v1/matchups", methods=['GET'])
+def fetch_matchups():
+    """
+       Function to fetch the users.
+       """
+    try:
+        collection = db.season_stats
+        # Call the function to get the query params
+        query_params = helper_module.parse_query_params(request.query_string)
+        # Check if dictionary is not empty
+        #pdb.set_trace()
+        if query_params:
+
+            # Try to convert the value to int
+            query = {k: int(v) if isinstance(v, str) and v.isdigit() else v for k, v in query_params.items()}
+            # squery["Year"] = {"$in": ["2000", "2001", "2015"]}
+            #pdb.set_trace()
+            # Fetch all the record(s)
+            records_fetched = collection.find(query)
+
+            # Check if the records are found
+            if records_fetched.count() > 2:
+                # Prepare the response
+                return dumps(records_fetched[0:2])
+            else:
+                # No records are found
+                return "", 404
+
+        # If dictionary is empty
+        else:
+            # Return all the records as query string parameters are not available
+            if collection.find().count > 0:
+                # Prepare response if the users are found
+                return dumps(collection.find())
+            else:
+                # Return empty array if no users are found
+                return jsonify([])
+    except:
+        # Error while trying to fetch the resource
+        # Add message for debugging purpose
+        return "", 500
+
 @app.route("/api/v1/players", methods=['GET'])
 def fetch_players():
     """
        Function to fetch the users.
        """
     try:
+        collection = db.players
         # Call the function to get the query params
         query_params = helper_module.parse_query_params(request.query_string)
         # Check if dictionary is not empty
@@ -76,10 +119,11 @@ def fetch_season_stats():
        Function to fetch season stats.
        """
     try:
+        collection.season_stats
         # Call the function to get the query params
         query_params = helper_module.parse_query_params(request.query_string)
         # Check if dictionary is not empty
-        pdb.set_trace()
+        #pdb.set_trace()
         if query_params:
 
             # Try to convert the value to int
